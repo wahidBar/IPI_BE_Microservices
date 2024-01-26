@@ -1,0 +1,22 @@
+{
+  "name": "ipi_be_microservices",
+  "version": "1.0.0",
+  "description": "Microservices Architecture IN IPI",
+  "main": "index.js",
+  "scripts": {
+    "test": "This IPI Application"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wahidBar/IPI_BE_Microservices.git"
+  },
+  "author": "ANW_BAR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wahidBar/IPI_BE_Microservices/issues"
+  },
+  "homepage": "https://github.com/wahidBar/IPI_BE_Microservices#readme"
+}
