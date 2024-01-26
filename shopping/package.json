@@ -1,0 +1,19 @@
+{
+  "name": "shopping",
+  "version": "1.0.0",
+  "description": "This Shopping Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "IPI Shopping"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wahidBar/IPI_BE_Microservices.git"
+  },
+  "author": "ANW_BAR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wahidBar/IPI_BE_Microservices/issues"
+  },
+  "homepage": "https://github.com/wahidBar/IPI_BE_Microservices#readme"
+}
