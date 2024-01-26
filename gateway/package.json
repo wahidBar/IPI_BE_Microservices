@@ -1,0 +1,19 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "description": "This Gateway Microservices IPI",
+  "main": "index.js",
+  "scripts": {
+    "test": "GATEWAY\t"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wahidBar/IPI_BE_Microservices\u001b[A\u001b[C\u001b[B.git"
+  },
+  "author": "ANW_BAR",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wahidBar/IPI_BE_Microservices\u001b[A\u001b[C\u001b[B/issues"
+  },
+  "homepage": "https://github.com/wahidBar/IPI_BE_Microservices\u001b[A\u001b[C\u001b[B#readme"
+}
