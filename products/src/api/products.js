@@ -1,7 +1,7 @@
-const { CUSTOMER_SERVICE, SHOPPING_SERVICE } = require("../config");
+const { USERS, SHOPPING_SERVICE } = require("../config");
 const ProductService = require("../services/product-service");
 const {
-  PublishCustomerEvent,
+  PublishUsersEvent,
   PublishShoppingEvent,
   PublishMessage,
 } = require("../utils");
@@ -64,8 +64,8 @@ module.exports = (app, channel) => {
       "ADD_TO_WISHLIST"
     );
 
-    // PublishCustomerEvent(data);
-    PublishMessage(channel, CUSTOMER_SERVICE, JSON.stringify(data));
+    // PublishUsersEvent(data);
+    PublishMessage(channel, USERS_SERVICE, JSON.stringify(data));
 
     res.status(200).json(data.data.product);
   });
@@ -79,8 +79,8 @@ module.exports = (app, channel) => {
       { productId },
       "REMOVE_FROM_WISHLIST"
     );
-    // PublishCustomerEvent(data);
-    PublishMessage(channel, CUSTOMER_SERVICE, JSON.stringify(data));
+    // PublishUsersEvent(data);
+    PublishMessage(channel, USERS_SERVICE, JSON.stringify(data));
 
     res.status(200).json(data.data.product);
   });
@@ -94,10 +94,10 @@ module.exports = (app, channel) => {
       "ADD_TO_CART"
     );
 
-    // PublishCustomerEvent(data);
+    // PublishUsersEvent(data);
     // PublishShoppingEvent(data);
 
-    PublishMessage(channel, CUSTOMER_SERVICE, JSON.stringify(data));
+    PublishMessage(channel, USERS_SERVICE, JSON.stringify(data));
     PublishMessage(channel, SHOPPING_SERVICE, JSON.stringify(data));
 
     const response = { product: data.data.product, unit: data.data.qty };
@@ -115,10 +115,10 @@ module.exports = (app, channel) => {
       "REMOVE_FROM_CART"
     );
 
-    // PublishCustomerEvent(data);
+    // PublishUsersEvent(data);
     // PublishShoppingEvent(data);
 
-    PublishMessage(channel, CUSTOMER_SERVICE, JSON.stringify(data));
+    PublishMessage(channel, USERS_SERVICE, JSON.stringify(data));
     PublishMessage(channel, SHOPPING_SERVICE, JSON.stringify(data));
 
     const response = { product: data.data.product, unit: data.data.qty };

@@ -58,12 +58,12 @@ module.exports.FormateData = (data) => {
 };
 
 //Raise Events
-module.exports.PublishCustomerEvent = async (payload) => {
-  axios.post("http://customer:8001/app-events/", {
+module.exports.PublishUsersEvent = async (payload) => {
+  axios.post("http://users:8001/app-events/", {
     payload,
   });
 
-  //     axios.post(`${BASE_URL}/customer/app-events/`,{
+  //     axios.post(`${BASE_URL}/users/app-events/`,{
   //         payload
   //     });
 };
