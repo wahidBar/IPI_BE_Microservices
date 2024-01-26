@@ -1,0 +1,15 @@
+{
+  "name": "stores",
+  "version": "1.0.0",
+  "description": "This Stores Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "IPI Stores"
+  },
+  "repository": {
+    "type": "git",
+    "url": "\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[B\u001b[Bhttps://github.com/wahidBar/IPI_BE_Microservices"
+  },
+  "author": "ANW_BAR",
+  "license": "ISC"
+}

@@ -18,5 +18,6 @@
   "bugs": {
     "url": "https://github.com/wahidBar/IPI_BE_Microservices/issues"
   },
-  "homepage": "https://github.com/wahidBar/IPI_BE_Microservices#readme"
+  "homepage": "https://github.com/wahidBar/IPI_BE_Microservices#readme",
+  "devDependencies": {}
 }
