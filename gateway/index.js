@@ -7,8 +7,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/users", proxy("http://localhost:8005"));
-app.use("/shopping", proxy("http://localhost:8006"));
+app.use("/users", proxy("http://localhost:8200"));
+app.use("/shopping", proxy("http://localhost:8400"));
 app.use("/products", proxy("http://localhost:8100"));
 app.use("/", proxy("http://localhost:8100")); // products
 

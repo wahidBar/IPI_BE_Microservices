@@ -1,0 +1,154 @@
+# version: "3"
+# services:
+#   mysql-db:
+#     image: mysql:latest
+#     container_name: mysql-db
+#     ports:
+#       - "3306:3306"
+#     environment:
+#       MYSQL_ROOT_PASSWORD: wahid112*
+#       MYSQL_DATABASE: db_ikpm
+#       MYSQL_USER: root
+#       MYSQL_PASSWORD: wahid112*
+#     volumes:
+#       - ./db/:/var/lib/mysql
+
+#   rabbitmq:
+#     image: rabbitmq:alpine
+#     container_name: rabbitmq
+#     ports:
+#       - "5672:5672"
+
+#   products:
+#     build:
+#       dockerfile: Dockerfile
+#       context: ./products
+#     container_name: products
+#     ports:
+#       - "8002:8002"
+#     restart: always
+#     depends_on:
+#       - "mysql-db"
+#       - "rabbitmq"
+#     volumes:
+#       - .:/app
+#       - /app/products/node_modules
+#     env_file:
+#       - ./products/.env.dev
+#   shopping:
+#     build:
+#       dockerfile: Dockerfile
+#       context: ./shopping
+#     container_name: shopping
+#     ports:
+#       - "8003:8003"
+#     restart: always
+#     depends_on:
+#       - "mysql-db"
+#       - "rabbitmq"
+#     volumes:
+#       - .:/app
+#       - /app/shopping/node_modules
+#     env_file:
+#       - ./shopping/.env.dev
+#   users:
+#     build:
+#       dockerfile: Dockerfile
+#       context: ./users
+#     container_name: users
+#     ports:
+#       - "8001:8001"
+#     restart: always
+#     depends_on:
+#       - "mysql-db"
+#       - "rabbitmq"
+#     volumes:
+#       - .:/app/
+#       - /app/users/node_modules
+#     env_file:
+#       - ./users/.env.dev
+#   nginx-proxy:
+#     build:
+#       dockerfile: Dockerfile
+#       context: ./proxy
+#     depends_on:
+#       - products
+#       - shopping
+#       - users
+#     ports:
+#       - 80:80
+version: "3"
+services:
+  nosql-db:
+    image: mvertes/alpine-mongo
+    ports:
+      - "27018:27017"
+    container_name: nosql-db
+    volumes:
+      - ./db/:/data/db
+
+  rabbitmq:
+    image: rabbitmq:alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+
+  products:
+    build:
+      dockerfile: Dockerfile
+      context: ./products
+    container_name: products
+    ports:
+      - "8100:8100"
+    restart: always
+    depends_on:
+      - "nosql-db"
+      - "rabbitmq"
+    volumes:
+      - .:/app
+      - /app/products/node_modules
+
+    env_file:
+      - ./products/.env.dev
+  shopping:
+    build:
+      dockerfile: Dockerfile
+      context: ./shopping
+    container_name: shopping
+    ports:
+      - "8400:8400"
+    restart: always
+    depends_on:
+      - "nosql-db"
+      - "rabbitmq"
+    volumes:
+      - .:/app
+      - /app/shopping/node_modules
+    env_file:
+      - ./shopping/.env.dev
+  users:
+    build:
+      dockerfile: Dockerfile
+      context: ./users
+    container_name: users
+    ports:
+      - "8200:8200"
+    restart: always
+    depends_on:
+      - "nosql-db"
+      - "rabbitmq"
+    volumes:
+      - .:/app/
+      - /app/users/node_modules
+    env_file:
+      - ./users/.env.dev
+  nginx-proxy:
+    build:
+      dockerfile: Dockerfile
+      context: ./proxy
+    depends_on:
+      - products
+      - shopping
+      - users
+    ports:
+      - 80:80
