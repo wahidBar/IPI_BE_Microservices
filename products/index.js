@@ -8,6 +8,6 @@ app.use("/", (req, res, next) => {
   return res.status(200).json({ msg: "Hello from Products" });
 });
 
-app.listen(8100, () => {
-  console.log("Products is Listening to Port : 8100");
+app.listen(8092, () => {
+  console.log("Products is Listening to Port : 8092");
 });

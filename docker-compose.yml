@@ -99,7 +99,7 @@ services:
       context: ./products
     container_name: products
     ports:
-      - "8100:8100"
+      - "8092:8092"
     restart: always
     depends_on:
       - "nosql-db"
@@ -116,7 +116,7 @@ services:
       context: ./shopping
     container_name: shopping
     ports:
-      - "8400:8400"
+      - "8095:8095"
     restart: always
     depends_on:
       - "nosql-db"
@@ -132,7 +132,7 @@ services:
       context: ./users
     container_name: users
     ports:
-      - "8200:8200"
+      - "8093:8093"
     restart: always
     depends_on:
       - "nosql-db"
