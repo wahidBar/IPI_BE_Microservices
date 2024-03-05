@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== "prod") {
 }
 
 module.exports = {
-  PORT: 8100,
+  PORT: 8092,
   DB_URL: "mongodb://localhost:27017/ipi_product",
   APP_SECRET: "jg_youtube_tutorial",
   BASE_URL: process.env.BASE_URL,

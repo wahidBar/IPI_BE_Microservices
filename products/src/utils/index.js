@@ -59,7 +59,7 @@ module.exports.FormateData = (data) => {
 
 //Raise Events
 module.exports.PublishUsersEvent = async (payload) => {
-  axios.post("http://users:8200/app-events/", {
+  axios.post("http://users:8093/app-events/", {
     payload,
   });
 
@@ -69,11 +69,11 @@ module.exports.PublishUsersEvent = async (payload) => {
 };
 
 module.exports.PublishShoppingEvent = async (payload) => {
-  // axios.post('http://gateway:8400/shopping/app-events/',{
+  // axios.post('http://gateway:8095/shopping/app-events/',{
   //         payload
   // });
 
-  axios.post(`http://shopping:8400/app-events/`, {
+  axios.post(`http://shopping:8095/app-events/`, {
     payload,
   });
 };
