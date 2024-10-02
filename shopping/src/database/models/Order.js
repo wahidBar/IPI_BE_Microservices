@@ -1,37 +1,51 @@
-const mongoose = require("mongoose");
+const { Model, DataTypes } = require("sequelize");
+const { sequelize } = require("../../database/connection"); // Make sure this path points to your database configuration
 
-const Schema = mongoose.Schema;
+class Order extends Model {}
 
-const OrderSchema = new Schema(
+Order.init(
   {
-    orderId: { type: String },
-    usersId: { type: String },
-    amount: { type: Number },
-    status: { type: String },
-    items: [
-      {
-        product: {
-          _id: { type: String, require: true },
-          name: { type: String },
-          desc: { type: String },
-          banner: { type: String },
-          type: { type: String },
-          unit: { type: Number },
-          price: { type: Number },
-          suplier: { type: String },
-        },
-        unit: { type: Number, require: true },
-      },
-    ],
+    id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    user_id: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    invoice: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    nominal: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    token_midtrans: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    created_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updated_at: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
-    toJSON: {
-      transform(doc, ret) {
-        delete ret.__v;
-      },
-    },
+    sequelize,
+    modelName: "Order",
+    tableName: "order",
     timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
   }
 );
 
-module.exports = mongoose.model("order", OrderSchema);
+module.exports = Order;

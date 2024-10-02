@@ -1,39 +1,35 @@
-const mongoose = require("mongoose");
-const { DB_URL } = require("../config");
+// const mongoose = require("mongoose");
+// const { DB_URL } = require("../config");
 
-module.exports = async () => {
+// module.exports = async () => {
+//   try {
+//     await mongoose.connect(DB_URL, {
+//       useNewUrlParser: true,
+//       useUnifiedTopology: true,
+//       useCreateIndex: true,
+//     });
+//     console.log("Db Connected");
+//   } catch (error) {
+//     console.log("Error ============");
+//     console.log(error);
+//   }
+// };
+const { Sequelize } = require("sequelize");
+const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = require("../config");
+
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  dialect: "mysql",
+  logging: false,
+});
+
+const connectDB = async () => {
   try {
-    await mongoose.connect(DB_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    });
-    console.log("Db Connected");
+    await sequelize.authenticate();
+    console.log("DB Connected");
   } catch (error) {
-    console.log("Error ============");
-    console.log(error);
+    console.error("Error ============", error);
   }
 };
 
-// const { Sequelize } = require("sequelize");
-
-// const db = new Sequelize("db_ikmp", "root", "wahid112*", {
-//   host: "localhost",
-//   dialect: "mysql",
-// });
-
-// const databaseConnection = async () => {
-//   try {
-//     await db.authenticate();
-//     console.log(
-//       "Connection to the database has been established successfully."
-//     );
-//   } catch (error) {
-//     console.error("Unable to connect to the database:", error);
-//   }
-// };
-
-// module.exports = {
-//   db,
-//   databaseConnection, // Export the function for connection
-// };
+module.exports = { sequelize, connectDB };

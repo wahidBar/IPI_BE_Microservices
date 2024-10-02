@@ -28,7 +28,7 @@ module.exports.ValidatePassword = async (
 
 module.exports.GenerateSignature = async (payload) => {
   try {
-    return await jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
+    return await jwt.sign(payload, APP_SECRET, { expiresIn: "1h" });
   } catch (error) {
     console.log(error);
     return error;
@@ -69,10 +69,63 @@ module.exports.CreateChannel = async () => {
   }
 };
 
-module.exports.PublishMessage = (channel, service, msg) => {
-  channel.publish(EXCHANGE_NAME, service, Buffer.from(msg));
-  console.log("Sent: ", msg);
+// module.exports.PublishMessage = (channel, service, msg) => {
+//   channel.publish(EXCHANGE_NAME, service, Buffer.from(msg));
+//   console.log("Sent: ", msg);
+// };
+
+// module.exports.SubscribeMessage = async (channel, service) => {
+//   await channel.assertExchange(EXCHANGE_NAME, "direct", { durable: true });
+//   const q = await channel.assertQueue("", { exclusive: true });
+//   console.log(` Waiting for messages in queue: ${q.queue}`);
+
+//   channel.bindQueue(q.queue, EXCHANGE_NAME, SHOPPING_SERVICE);
+
+//   channel.consume(
+//     q.queue,
+//     (msg) => {
+//       if (msg.content) {
+//         console.log("the message is:", msg.content.toString());
+//         service.SubscribeEvents(msg.content.toString());
+//       }
+//       console.log("[X] received");
+//     },
+//     {
+//       noAck: true,
+//     }
+//   );
+// };
+module.exports.PublishMessage = async (channel, service, msg) => {
+  const correlationId = generateUuid();
+  const replyQueue = await channel.assertQueue("", { exclusive: true });
+
+  return new Promise((resolve, reject) => {
+    channel.consume(
+      replyQueue.queue,
+      (msg) => {
+        if (msg.properties.correlationId === correlationId) {
+          resolve(JSON.parse(msg.content.toString()));
+        }
+      },
+      { noAck: true }
+    );
+
+    channel.publish(EXCHANGE_NAME, service, Buffer.from(msg), {
+      correlationId,
+      replyTo: replyQueue.queue,
+    });
+
+    console.log("Sent: ", msg);
+  });
 };
+
+function generateUuid() {
+  return (
+    Math.random().toString() +
+    Math.random().toString() +
+    Math.random().toString()
+  );
+}
 
 module.exports.SubscribeMessage = async (channel, service) => {
   await channel.assertExchange(EXCHANGE_NAME, "direct", { durable: true });
@@ -83,12 +136,22 @@ module.exports.SubscribeMessage = async (channel, service) => {
 
   channel.consume(
     q.queue,
-    (msg) => {
+    async (msg) => {
       if (msg.content) {
-        console.log("the message is:", msg.content.toString());
-        service.SubscribeEvents(msg.content.toString());
+        console.log("The message is:", msg.content.toString());
+        const response = await service.SubscribeEvents(msg.content.toString());
+
+        if (msg.properties.replyTo) {
+          channel.sendToQueue(
+            msg.properties.replyTo,
+            Buffer.from(JSON.stringify(response)),
+            {
+              correlationId: msg.properties.correlationId,
+            }
+          );
+        }
       }
-      console.log("[X] received");
+      console.log("[X] Received");
     },
     {
       noAck: true,

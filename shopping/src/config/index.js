@@ -36,14 +36,29 @@ if (process.env.NODE_ENV !== "prod") {
   dotEnv.config();
 }
 
+// module.exports = {
+//   PORT: 8095,
+//   DB_URL: "mongodb://localhost:27017/ipi_shopping",
+//   APP_SECRET: "jg_youtube_tutorial",
+//   BASE_URL: process.env.BASE_URL,
+//   EXCHANGE_NAME: "ONLINE_SHOP",
+//   MSG_QUEUE_URL:
+//     "amqps://zdsrcaes:N9XkBves01In8ASXWK7A8oGSDUIa-21x@octopus.rmq3.cloudamqp.com/zdsrcaes",
+//   USERS_SERVICE: "users_service",
+//   SHOPPING_SERVICE: "shopping_service",
+// };
 module.exports = {
   PORT: 8095,
-  DB_URL: "mongodb://localhost:27017/ipi_shopping",
+  DB_URL: "localhost:8080",
+  DB_USER: "root", // Your MySQL username
+  DB_PASSWORD: "wahid112*", // Your MySQL password
+  DB_NAME: "db_ipi_shopping",
   APP_SECRET: "jg_youtube_tutorial",
   BASE_URL: process.env.BASE_URL,
   EXCHANGE_NAME: "ONLINE_SHOP",
   MSG_QUEUE_URL:
     "amqps://zdsrcaes:N9XkBves01In8ASXWK7A8oGSDUIa-21x@octopus.rmq3.cloudamqp.com/zdsrcaes",
+  STORES_SERVICE: "stores_service",
   USERS_SERVICE: "users_service",
   SHOPPING_SERVICE: "shopping_service",
 };

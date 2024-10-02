@@ -29,7 +29,7 @@ module.exports.ValidatePassword = async (
 
 module.exports.GenerateSignature = async (payload) => {
   try {
-    return await jwt.sign(payload, APP_SECRET, { expiresIn: "30d" });
+    return await jwt.sign(payload, APP_SECRET, { expiresIn: "1h" });
   } catch (error) {
     console.log(error);
     return error;
@@ -58,18 +58,18 @@ module.exports.FormateData = (data) => {
 };
 
 //Raise Events
-module.exports.PublishUsersEvent = async (payload) => {
-  axios.post("http://users:8093/app-events/", {
+module.exports.PublishUserEvent = async (payload) => {
+  axios.post("http://user:8093/app-events/", {
     payload,
   });
 
-  //     axios.post(`${BASE_URL}/users/app-events/`,{
+  //     axios.post(`${BASE_URL}/customer/app-events/`,{
   //         payload
   //     });
 };
 
 module.exports.PublishShoppingEvent = async (payload) => {
-  // axios.post('http://gateway:8095/shopping/app-events/',{
+  // axios.post('http://gateway:8000/shopping/app-events/',{
   //         payload
   // });
 

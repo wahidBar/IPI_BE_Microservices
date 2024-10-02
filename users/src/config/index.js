@@ -17,4 +17,5 @@ module.exports = {
     "amqps://zdsrcaes:N9XkBves01In8ASXWK7A8oGSDUIa-21x@octopus.rmq3.cloudamqp.com/zdsrcaes",
   USERS_SERVICE: "users_service",
   SHOPPING_SERVICE: "shopping_service",
+  STORES_SERVICE: "stores_service",
 };
