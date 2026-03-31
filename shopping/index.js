@@ -7,6 +7,8 @@ app.use("/", (req, res, next) => {
   return res.status(200).json({ msg: "Hello from Shopping" });
 });
 
-app.listen(8095, () => {
-  console.log("Shopping is Listening toPort 8003");
+const PORT = process.env.PORT || 8096;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Shopping running on port ${PORT}`);
 });

@@ -1,0 +1,117 @@
+version: "3"
+services:
+  # MySQL service for shopping
+  mysql-db:
+    image: mysql:latest
+    container_name: mysql-db
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword # Root password untuk MySQL
+      MYSQL_DATABASE: db_ipi_shopping # Database default
+      MYSQL_USER: root # User untuk koneksi (root)
+      MYSQL_PASSWORD: rootpassword
+    volumes:
+      - ./db/mysql-data:/var/lib/mysql
+    restart: always
+
+  # MongoDB service for other microservices
+  nosql-db:
+    image: mvertes/alpine-mongo
+    container_name: nosql-db
+    ports:
+      - "27018:27017"
+    volumes:
+      - ./db/mongodb/:/data/db
+
+  rabbitmq:
+    image: rabbitmq:alpine
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+
+  # Products microservice using MongoDB
+  products:
+    build:
+      dockerfile: Dockerfile
+      context: ./products
+    container_name: products
+    ports:
+      - "8093:8093"
+    restart: always
+    depends_on:
+      - "nosql-db"
+      - "rabbitmq"
+    volumes:
+      - .:/app
+      - /app/products/node_modules
+    env_file:
+      - ./products/.env
+  # Users microservice using MongoDB
+  users:
+    build:
+      dockerfile: Dockerfile
+      context: ./users
+    container_name: users
+    ports:
+      - "8094:8094"
+    restart: always
+    depends_on:
+      - "nosql-db"
+      - "rabbitmq"
+    volumes:
+      - .:/app/
+      - /app/users/node_modules
+    env_file:
+      - ./users/.env
+  # Stores microservice using MongoDB
+  stores:
+    build:
+      dockerfile: Dockerfile
+      context: ./stores
+    container_name: stores
+    ports:
+      - "8095:8095"
+    restart: always
+    depends_on:
+      - "nosql-db"
+      - "rabbitmq"
+    volumes:
+      - .:/app/
+      - /app/stores/node_modules
+    env_file:
+      - ./stores/.env
+  # Shopping microservice using MySQL
+  shopping:
+    build:
+      dockerfile: Dockerfile
+      context: ./shopping
+    container_name: shopping
+    ports:
+      - "8096:8096"
+    restart: always
+    depends_on:
+      - "mysql-db"
+      - "rabbitmq"
+    volumes:
+      - .:/app
+      - /app/shopping/node_modules
+    env_file:
+      - ./shopping/.env
+
+  # Nginx proxy for routing between services
+  nginx-proxy:
+    build:
+      dockerfile: Dockerfile
+      context: ./proxy
+    depends_on:
+      - products
+      - shopping
+      - users
+      - stores
+    ports:
+      - "8081:80"
+
+networks:
+  default:
+    driver: bridge

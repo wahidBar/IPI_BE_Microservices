@@ -14,7 +14,7 @@ const UsersSchema = new Schema(
     role_id: Number,
     confirm: Number,
     status: Number,
-    storeId: { type: String, required: true },
+    storeId: { type: String },
     cart: [
       {
         product: {

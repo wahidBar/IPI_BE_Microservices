@@ -279,15 +279,8 @@ module.exports = (app, channel) => {
       );
       const user = response.data.user;
 
-      const {
-        totalbayar,
-        tujuan,
-        kodepospembeli,
-        berat,
-        paket,
-        kurir,
-        alamatpembeli,
-      } = req.body;
+      const { totalbayar, tujuan, kodepospembeli, kurir, alamatpembeli } =
+        req.body;
       console.log("this total bayar dari semuanya", totalbayar);
       const midtransServerKey = "SB-Mid-server-KfOHtIYQdM-mZcR0GlslJk28";
       const midtransClientKey = "SB-Mid-client-O9CttO-48I-qx0KO";
@@ -394,7 +387,7 @@ module.exports = (app, channel) => {
           tujuan: tujuan,
           resi: null,
           id_bayar: 2,
-          ajukanbatal: 1,
+          ajukanbatal: 0,
           keterangan: "Proses",
           status_id: 3,
           pesanan_id: pesananId,

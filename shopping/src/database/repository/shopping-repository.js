@@ -227,8 +227,10 @@ class ShoppingRepository {
             console.log("Item Delete");
             return { message: "Item removed from cart successfully." };
           } else {
+            const newUnit = parseInt(cartItem.unit) + parseInt(qty);
+            const newNominal = parseInt(newUnit) * parseInt(cartItem.price);
             await CartModel.update(
-              { unit: qty, Nominal: parseInt(qty) * parseInt(price) },
+              { unit: newUnit, nominal: newNominal },
               {
                 where: {
                   userId: userId,

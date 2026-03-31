@@ -84,14 +84,15 @@ OrderDetail.init(
     ajukanbatal: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 0,
     },
     alasan_pembatalan: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     ajukan_batal_image: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     keterangan: {
       type: DataTypes.STRING,

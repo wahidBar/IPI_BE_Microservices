@@ -8,6 +8,8 @@ app.use("/", (req, res, next) => {
   return res.status(200).json({ msg: "Hello from Stores" });
 });
 
-app.listen(8094, () => {
-  console.log("Stores is Listening to Port : 8094");
+const PORT = process.env.PORT || 8095;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Stores running on port ${PORT}`);
 });

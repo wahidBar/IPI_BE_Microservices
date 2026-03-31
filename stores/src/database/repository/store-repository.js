@@ -37,7 +37,7 @@ class StoreRepository {
         throw error;
       }
     } else {
-      console.log("hskashkasha" + name);
+      console.log("Store = " + name);
       store = new StoreModel({
         name,
         description,

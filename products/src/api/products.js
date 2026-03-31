@@ -98,7 +98,9 @@ module.exports = (app, channel) => {
 
   // get all
   app.get("/", async (req, res, next) => {
-    console.log(999);
+    console.log("oooo");
+    
+    console.log("Get Products");
     try {
       const { data } = await service.GetProducts();
       return res.status(200).json(data);
@@ -134,7 +136,10 @@ module.exports = (app, channel) => {
   // get by category_id
   app.get("/find/by/category", async (req, res, next) => {
     try {
-      const { data } = await service.GetProductsByCategory();
+      const category = req.query.category;
+      console.log(category);
+
+      const { data } = await service.GetProductsByCategory(category);
       return res.status(200).json(data);
     } catch (error) {
       return res.status(404).json({ error });
@@ -186,7 +191,7 @@ module.exports = (app, channel) => {
     }
   );
 
-  app.put("/update/:id", upload.single("banner"), async (req, res, next) => {
+  app.post("/update/:id", upload.single("banner"), async (req, res, next) => {
     try {
       const productId = req.params.id;
       const request = req.body;
@@ -228,7 +233,7 @@ module.exports = (app, channel) => {
 
   // CATEGORY
   app.get("/category/get", async (req, res, next) => {
-    console.log(9991);
+    console.log("Get Category Product");
     // const type = req.params.type;
     try {
       const { data } = await service.GetCategory();
@@ -386,7 +391,7 @@ module.exports = (app, channel) => {
         },
         instruction
       );
-      console.log(data);
+      // console.log(data);
       if (data.success === true) {
         PublishMessage(channel, USERS_SERVICE, JSON.stringify(data));
         PublishMessage(channel, SHOPPING_SERVICE, JSON.stringify(data));
@@ -441,9 +446,6 @@ module.exports = (app, channel) => {
       { productId },
       "REMOVE_FROM_CART"
     );
-
-    // PublishUsersEvent(data);
-    // PublishShoppingEvent(data);
 
     PublishMessage(channel, USERS_SERVICE, JSON.stringify(data));
     PublishMessage(channel, SHOPPING_SERVICE, JSON.stringify(data));

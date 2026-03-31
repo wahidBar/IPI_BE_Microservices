@@ -340,6 +340,8 @@ class UsersRepository {
           let isExist = false;
           cartItems = cartItems
             .map((item) => {
+              const newUnit = parseInt(item.unit) + parseInt(qty);
+              const newNominal = parseInt(newUnit) * parseInt(price);
               // Update transaction and status for store
               if (
                 isUpdate &&
@@ -372,8 +374,8 @@ class UsersRepository {
                   return null; // Mark for removal
                 } else {
                   console.log("updating item quantity and nominal");
-                  item.unit = qty;
-                  item.nominal = qty * price;
+                  item.unit = newUnit;
+                  item.nominal = newNominal;
                   isExist = true;
                   return item;
                 }

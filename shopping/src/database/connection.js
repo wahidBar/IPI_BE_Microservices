@@ -1,34 +1,23 @@
-// const mongoose = require("mongoose");
-// const { DB_URL } = require("../config");
-
-// module.exports = async () => {
-//   try {
-//     await mongoose.connect(DB_URL, {
-//       useNewUrlParser: true,
-//       useUnifiedTopology: true,
-//       useCreateIndex: true,
-//     });
-//     console.log("Db Connected");
-//   } catch (error) {
-//     console.log("Error ============");
-//     console.log(error);
-//   }
-// };
 const { Sequelize } = require("sequelize");
-const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = require("../config");
+const { DB_URL, DB_USER, DB_PORT, DB_NAME, DB_PASSWORD } = require("../config");
 
+console.log(
+  `Connecting to DB at ${DB_URL}:${DB_PORT}/${DB_NAME} with user ${DB_USER}`
+);
+
+// Membuat instance Sequelize untuk koneksi ke database MySQL
 const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
-  host: DB_HOST,
-  dialect: "mysql",
-  logging: false,
+  host: DB_URL,
+  port: DB_PORT,
+  dialect: "mysql", // Dialect MySQL
 });
 
 const connectDB = async () => {
   try {
-    await sequelize.authenticate();
+    await sequelize.authenticate(); // Mencoba untuk terkoneksi ke database
     console.log("DB Connected");
   } catch (error) {
-    console.error("Error ============", error);
+    console.error("Error connecting to the database:", error);
   }
 };
 

@@ -42,6 +42,11 @@ module.exports.ValidateSignature = async (req) => {
     const signature = req.get("Authorization");
     console.log(signature);
     const payload = await jwt.verify(signature.split(" ")[1], APP_SECRET);
+    console.log("Payload:", payload);
+    req.user = {
+      ...payload,
+      identity: payload.identity || null, // Pastikan identity tersedia
+    };
     req.user = payload;
     return true;
   } catch (error) {
@@ -60,7 +65,7 @@ module.exports.FormateData = (data) => {
 
 //Raise Events
 module.exports.PublishUserEvent = async (payload) => {
-  axios.post("http://user:8092/app-events/", {
+  axios.post("http://user:8093/app-events/", {
     payload,
   });
 
@@ -74,7 +79,7 @@ module.exports.PublishShoppingEvent = async (payload) => {
   //         payload
   // });
 
-  axios.post(`http://shopping:8095/app-events/`, {
+  axios.post(`http://shopping:8096/app-events/`, {
     payload,
   });
 };

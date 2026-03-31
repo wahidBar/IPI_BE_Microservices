@@ -141,6 +141,11 @@ module.exports = (app, channel) => {
   app.post("/signup", upload.single("photo_url"), async (req, res, next) => {
     const photo_url = req.file;
     const request = req.body;
+
+    if (!request.storeId) {
+      return res.status(400).json({ error: "storeId is required" });
+    }
+
     const { data } = await service.SignUp({
       name: request.name,
       username: request.username,
@@ -152,31 +157,30 @@ module.exports = (app, channel) => {
     res.json(data);
   });
 
-  app.put(
+  app.post(
     "/update",
     UserAuth,
     upload.single("photo_url"),
     async (req, res, next) => {
+      log("update user");
       try {
-        const { _id } = req.user; // Ensure _id is extracted from the authenticated user
+        const { _id } = req.user;
         const photo_url = req.file;
         const request = req.body;
 
-        // Call the updateUser service with the provided data
         const { data } = await service.updateUser({
-          id: _id, // Use the authenticated user id
+          id: _id,
           name: request.name,
           username: request.username,
           password: request.password,
           phone: request.phone,
-          storeId: request.storeId, // Include storeId if it's part of the request
-          photo_url: photo_url ? photo_url.filename : null, // Handle file upload properly
+          storeId: request.storeId,
+          photo_url: photo_url ? photo_url.filename : null,
         });
 
-        // Send the updated data in the response
         res.json(data);
       } catch (error) {
-        next(error); // Pass any errors to error handling middleware
+        next(error);
       }
     }
   );
@@ -189,10 +193,20 @@ module.exports = (app, channel) => {
     res.json(data);
   });
 
+  const blacklistedTokens = new Set();
+  app.post("/logout", UserAuth, (req, res, next) => {
+    try {
+      const token = req.get("Authorization").split(" ")[1];
+      blacklistedTokens.add(token); // Tambahkan ke blacklist
+      res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.get("/ByUsername", async (req, res, next) => {
     const { username } = req.body;
 
-    // const username = String(email);
     console.log(username);
     const { data } = await service.FindByUsername(username);
     return res.status(200).json(data);
@@ -210,6 +224,12 @@ module.exports = (app, channel) => {
       country,
     });
 
+    res.json(data);
+  });
+
+  app.get("/delete", UserAuth, async (req, res, next) => {
+    const { _id } = req.user;
+    const { data } = await service.GetProfile({ _id });
     res.json(data);
   });
 

@@ -1,20 +1,21 @@
 const dotEnv = require("dotenv");
 
 if (process.env.NODE_ENV !== "prod") {
-  const configFile = `./.env.${process.env.NODE_ENV}`;
+  console.log("ini" + process.env.NODE_ENV);
+  const configFile = `./.env.${process.env.NODE_ENV}`.trim();
   dotEnv.config({ path: configFile });
 } else {
   dotEnv.config();
 }
+// console.log(PORT);
 
 module.exports = {
-  PORT: 8093,
-  DB_URL: "mongodb://localhost:27017/ipi_users",
-  APP_SECRET: "jg_youtube_tutorial",
+  PORT: process.env.PORT,
+  DB_URL: process.env.MONGODB_URI,
+  APP_SECRET: process.env.APP_SECRET,
   BASE_URL: process.env.BASE_URL,
-  EXCHANGE_NAME: "ONLINE_SHOP",
-  MSG_QUEUE_URL:
-    "amqps://zdsrcaes:N9XkBves01In8ASXWK7A8oGSDUIa-21x@octopus.rmq3.cloudamqp.com/zdsrcaes",
+  EXCHANGE_NAME: process.env.EXCHANGE_NAME,
+  MSG_QUEUE_URL: process.env.MSG_QUEUE_URL,
   USERS_SERVICE: "users_service",
   SHOPPING_SERVICE: "shopping_service",
   STORES_SERVICE: "stores_service",

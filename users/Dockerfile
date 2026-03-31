@@ -1,4 +1,4 @@
-FROM node
+FROM node:20-alpine
 
 WORKDIR /app/users
 
@@ -8,7 +8,7 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8093
+EXPOSE 8094
 
 # ENV npm_config_build_from_source=true
 

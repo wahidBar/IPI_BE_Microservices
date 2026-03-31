@@ -17,6 +17,9 @@ class ProductRepository {
     // skuId,
     variants,
   }) {
+    if (typeof variants === "string") {
+      variants = JSON.parse(variants);
+    }
     const productsWithDiscount = variants.map((variant) => ({
       ...variant,
       discount_price: variant.price - variant.price * (variant.discount / 100),
@@ -145,8 +148,18 @@ class ProductRepository {
     return await CategorysModel.findById(id);
   }
 
-  async FindByCategory(category) {
-    const products = await ProductModel.find({ type: category });
+  async FindByCategory(categoryName) {
+    // Cari kategori berdasarkan nama
+    const category = await CategorysModel.findOne({ name: categoryName });
+
+    if (!category) {
+      throw new Error("Kategori tidak ditemukan");
+    }
+
+    // Cari produk berdasarkan id kategori
+    const products = await ProductModel.find({
+      category: category._id,
+    }).populate("category");
 
     return products;
   }

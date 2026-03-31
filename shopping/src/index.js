@@ -9,8 +9,8 @@ const StartServer = async () => {
 
   await connectDB();
 
-  console.log("ajlali");
   await expressApp(app);
+
   app.use("/uploads", express.static("uploads"));
   app
     .listen(PORT, () => {

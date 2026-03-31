@@ -1,115 +1,118 @@
-version: "3"
+version: "3.9"
+
 services:
-  # MySQL service for shopping
-  mysql-db:
-    image: mysql:latest
-    container_name: mysql-db
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: wahid112*
-      MYSQL_DATABASE: db_ikpm
-      MYSQL_USER: root
-      MYSQL_PASSWORD: wahid112*
-    volumes:
-      - ./mysql-data:/var/lib/mysql
-
-  # MongoDB service for other microservices
-  nosql-db:
-    image: mongo:latest
-    container_name: nosql-db
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./mongodb-data:/data/db
-
+  # =====================
+  # RabbitMQ (container)
+  # =====================
   rabbitmq:
-    image: rabbitmq:alpine
+    image: rabbitmq:3-management-alpine
     container_name: rabbitmq
     ports:
       - "5672:5672"
+      - "15672:15672"
+    networks:
+      - ipi_net
 
-  # Products microservice using MongoDB
+  # =====================
+  # Products Service (MongoDB HOST)
+  # =====================
   products:
-    build:
-      dockerfile: Dockerfile
-      context: ./products
+    build: ./products
     container_name: products
-    ports:
-      - "8092:8092"
-    restart: always
-    depends_on:
-      - "nosql-db"
-      - "rabbitmq"
-    volumes:
-      - .:/app
-      - /app/products/node_modules
-    env_file:
-      - ./products/.env.dev
-
-  # Shopping microservice using MySQL
-  shopping:
-    build:
-      dockerfile: Dockerfile
-      context: ./shopping
-    container_name: shopping
-    ports:
-      - "8095:8095"
-    restart: always
-    depends_on:
-      - "mysql-db"
-      - "rabbitmq"
-    volumes:
-      - .:/app
-      - /app/shopping/node_modules
-    env_file:
-      - ./shopping/.env.dev
-
-  # Stores microservice using MongoDB
-  stores:
-    build:
-      dockerfile: Dockerfile
-      context: ./stores
-    container_name: stores
-    ports:
-      - "8094:8094"
-    restart: always
-    depends_on:
-      - "nosql-db"
-      - "rabbitmq"
-    volumes:
-      - .:/app/
-      - /app/stores/node_modules
-    env_file:
-      - ./stores/.env.dev
-
-  # Users microservice using MongoDB
-  users:
-    build:
-      dockerfile: Dockerfile
-      context: ./users
-    container_name: users
     ports:
       - "8093:8093"
     restart: always
     depends_on:
-      - "nosql-db"
-      - "rabbitmq"
+      - rabbitmq
     volumes:
-      - .:/app/
-      - /app/users/node_modules
+      - ./products:/app
+      - /app/node_modules
     env_file:
-      - ./users/.env.dev
+      - ./products/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ipi_net
 
-  # Nginx proxy for routing between services
+  # =====================
+  # Users Service (MongoDB HOST)
+  # =====================
+  users:
+    build: ./users
+    container_name: users
+    ports:
+      - "8094:8094"
+    restart: always
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./users:/app
+      - /app/node_modules
+    env_file:
+      - ./users/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ipi_net
+
+  # =====================
+  # Stores Service (MongoDB HOST)
+  # =====================
+  stores:
+    build: ./stores
+    container_name: stores
+    ports:
+      - "8095:8095"
+    restart: always
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./stores:/app
+      - /app/node_modules
+    env_file:
+      - ./stores/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ipi_net
+
+  # =====================
+  # Shopping Service (MySQL HOST)
+  # =====================
+  shopping:
+    build: ./shopping
+    container_name: shopping
+    ports:
+      - "8096:8096"
+    restart: always
+    depends_on:
+      - rabbitmq
+    volumes:
+      - ./shopping:/app
+      - /app/node_modules
+    env_file:
+      - ./shopping/.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - ipi_net
+
+  # =====================
+  # Nginx Reverse Proxy
+  # =====================
   nginx-proxy:
-    build:
-      dockerfile: Dockerfile
-      context: ./proxy
+    build: ./proxy
+    container_name: nginx-proxy
+    ports:
+      - "8081:80"
     depends_on:
       - products
-      - shopping
       - users
       - stores
-    ports:
-      - "80:80"
+      - shopping
+    networks:
+      - ipi_net
+
+networks:
+  ipi_net:
+    driver: bridge
